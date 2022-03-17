@@ -1,0 +1,34 @@
+package com;
+
+import java.io.File;
+import java.security.spec.RSAOtherPrimeInfo;
+
+public class StringSlicing {
+    public static void main(String[] args) {
+        String initialPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/src/com";
+        String finalPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/MultithreadingFolder";
+
+
+        String sourcePath = "home/ashwinroyal/IdeaProjects/Stream/FileSystem/src/com/MultithreadingRecursiveFileDirectorySystem/mul";
+        String destination = sourcePath.substring(initialPath.length(),sourcePath.length()-3);
+        System.out.println("destination: "+ destination);
+        System.out.println("Final string for: "+finalPath.concat("/"+destination));
+
+        File fileOut = new File("/home/ashwinroyal/IdeaProjects/Stream/FileSystem/MultithreadingFolder/Main.rxt");
+        boolean ceck = fileOut.exists();
+        System.out.println(ceck);
+        if(ceck){
+            System.out.println("asjfkas");
+            System.out.println("Fielout: "+fileOut.getName());
+            System.out.println("Fielout: "+fileOut.getPath());
+        }
+
+    }
+}
+
+
+//destination: MultithreadingRecursiveFileDirectorySystem/
+//        Final string for: /home/ashwinroyal/IdeaProjects/Stream/FileSystem/MultithreadingFolder/MultithreadingRecursiveFileDirectorySystem/
+//        asjfkas
+//        Fielout: MultithreadingFolder
+//        Fielout: /home/ashwinroyal/IdeaProjects/Stream/FileSystem/MultithreadingFolder
