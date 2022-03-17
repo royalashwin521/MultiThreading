@@ -6,28 +6,44 @@ import com.RecursiveFileSystem.RecursiveFileSystem;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
 
     Long startTime = System.currentTimeMillis();
-    String initialPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/src";
-    String finalPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/";
+    String initialPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/src/com";
+    String finalPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/MultithreadingFolder";
     Main main = new Main();
 
 //    main.oneFileCopying(initialPath,finalPath);
 //    main.recursiveDirectoryFileCopying(initialPath,finalPath);
+//    main.directoryFileCopyingThroughMultithreading(initialPath,finalPath);
 
         File fileIn = new File(initialPath);
-        String[] worklist = fileIn.list();
-        System.out.println(Arrays.toString(worklist));
+        int numberOfthread = 2;
 
-//        main.directoryFileCopyingThroughMultithreading(initialPath,finalPath);
+        if(fileIn.isFile()){
+            main.oneFileCopying(initialPath,finalPath);
+        }else {
+            MultithreadingFileCopying multithreadingFileCopying = new MultithreadingFileCopying(initialPath,finalPath);
+            multithreadingFileCopying.directoryListing(initialPath);
+//            multithreadingFileCopying.run();
 
-    System.out.println("Total time taken to copy: "+(System.currentTimeMillis()-startTime));
+            MultithreadingFileCopying multithreadingFileCopying_thread1 = new MultithreadingFileCopying(initialPath,finalPath);
+//            MultithreadingFileCopying multithreadingFileCopying_thread2 = new MultithreadingFileCopying(initialPath,finalPath);
 
+            multithreadingFileCopying_thread1.start();
+//            multithreadingFileCopying_thread2.start();
+
+            multithreadingFileCopying_thread1.join();
+//            multithreadingFileCopying_thread2.join();
+
+        }
+            System.out.println("check 1");
+        System.out.println("Total time taken to copy: "+(System.currentTimeMillis()-startTime));
+        //Create thread accordingly to work on the list
     }
+
 
     public void oneFileCopying(String initialPath,String finalPath) throws IOException {
 
