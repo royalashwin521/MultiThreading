@@ -1,0 +1,95 @@
+package com.MultithreadingRecursiveFileDirectorySystem;
+
+import com.FileStream.InputOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+
+public class Multithreading implements Runnable {
+    public static String initialPath;
+    private static String finalPath;
+    static LinkedList<File> workList = new LinkedList<>();
+
+    public Multithreading(String initialPath, String finalPath) {
+        Multithreading.initialPath = initialPath;
+        Multithreading.finalPath = finalPath;
+    }
+
+    public Multithreading() {
+
+    }
+
+    public void multithreading(LinkedList workList) throws IOException {
+        Multithreading multithreadingFileCopying = new Multithreading();
+        String sourcePath;
+
+        synchronized (this) {
+            //Error: java.util.NoSuchElementException using iterator in java
+            sourcePath = String.valueOf(workList.getFirst());
+            workList.removeFirst();
+        }
+        File fileIn = new File(sourcePath);
+
+        String destination = finalPath.concat(sourcePath.substring(initialPath.length()));
+        File fileOut = new File(destination);
+
+        try {
+            multithreadingFileCopying.dirchecking(fileIn, fileOut);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            if (workList.isEmpty()) {
+                //go to main and check if all work completed by threads
+                Thread.sleep(10);
+                System.out.println("My list got empty and name is ");
+            } else {
+                try {
+                    multithreading(workList);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    synchronized public void directoryListing(String Path){
+
+        File fileIn = new File(Path);
+        File[] list = fileIn.listFiles();
+        for (File temp: list) {
+            workList.addLast(temp);
+        }
+    }
+
+    public void dirchecking(File fileIn, File fileOut) throws IOException, InterruptedException {
+        System.out.println("i got : "+fileIn.getName());
+        if(fileIn.isDirectory()) {
+            if (!fileOut.exists()) {
+                fileOut.mkdir();
+                directoryListing(fileIn.getPath());
+                run();
+            }else {
+                System.out.println("did i created dir: "+fileOut.getName());
+                run();
+            }
+        }
+        else {
+            if(!fileOut.exists()){
+                InputOutputStream inputOutputStream = new InputOutputStream();
+                inputOutputStream.readInputFile(fileIn.getPath(),fileOut.getPath());
+                run();
+            }
+            else {
+                System.out.println("did i created file: "+fileOut.getName());
+                run();
+            }
+        }
+    }
+}
