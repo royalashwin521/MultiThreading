@@ -1,47 +1,59 @@
 package com;
 
 import com.FileStream.InputOutputStream;
-import com.MultithreadingRecursiveFileDirectorySystem.MultithreadingFileCopying;
+import com.MultithreadingRecursiveFileDirectorySystem.Multithreading;
 import com.RecursiveFileSystem.RecursiveFileSystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
 
+
     Long startTime = System.currentTimeMillis();
-    String initialPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/src/com";
+    Long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+
+        System.out.println("Memory : "+beforeUsedMem);
+//        String initialPath = "/home/ashwinroyal/Downloads/protobuf-all-3.19.4";
+        String initialPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/src/com";
+//    String finalPath = "/home/ashwinroyal/IdeaProjects/recursiveDirCreated";
     String finalPath = "/home/ashwinroyal/IdeaProjects/Stream/FileSystem/MultithreadingFolder";
     Main main = new Main();
 
 //    main.oneFileCopying(initialPath,finalPath);
 //    main.recursiveDirectoryFileCopying(initialPath,finalPath);
-//    main.directoryFileCopyingThroughMultithreading(initialPath,finalPath);
+//    main.directoryFileCopyingThroughMultithreading(initialPath,finalPath,2);
 
         File fileIn = new File(initialPath);
-        int numberOfthread = 2;
+
 
         if(fileIn.isFile()){
             main.oneFileCopying(initialPath,finalPath);
         }else {
-            MultithreadingFileCopying multithreadingFileCopying = new MultithreadingFileCopying(initialPath,finalPath);
+            Multithreading multithreadingFileCopying = new Multithreading(initialPath,finalPath);
             multithreadingFileCopying.directoryListing(initialPath);
 //            multithreadingFileCopying.run();
 
-            MultithreadingFileCopying multithreadingFileCopying_thread1 = new MultithreadingFileCopying(initialPath,finalPath);
-//            MultithreadingFileCopying multithreadingFileCopying_thread2 = new MultithreadingFileCopying(initialPath,finalPath);
+            Multithreading multithreadingFileCopying_thread1 = new Multithreading(initialPath,finalPath);
 
-            multithreadingFileCopying_thread1.start();
-//            multithreadingFileCopying_thread2.start();
+            Thread t1 = new Thread(multithreadingFileCopying_thread1);
+            Thread t2 = new Thread(multithreadingFileCopying_thread1);
 
-            multithreadingFileCopying_thread1.join();
-//            multithreadingFileCopying_thread2.join();
+            t1.start();
+            t2.start();
+
+            t1.join();
+            t2.join();
+
 
         }
             System.out.println("check 1");
         System.out.println("Total time taken to copy: "+(System.currentTimeMillis()-startTime));
-        //Create thread accordingly to work on the list
+
     }
 
 
@@ -57,49 +69,11 @@ public class Main {
         recursiveFileSystem.recursiveDirectoryFileCreation(initialPath,finalPath);
     }
 
-    public void  directoryFileCopyingThroughMultithreading(String initialPath,String finalPath) throws IOException, InterruptedException {
-
-//        MultithreadingFileCopying multithreadingFileCopying = new MultithreadingFileCopying(initialPath,finalPath);
-//        multithreadingFileCopying.start();
-//        System.out.println();
-
-//        MultithreadingFileCopying multithreadingFileCopying1 = new MultithreadingFileCopying(initialPath,finalPath);
-//        multithreadingFileCopying1.start();
-
-//        multithreadingFileCopying.join();
-//        multithreadingFileCopying1.join();
-    }
+    public void  directoryFileCopyingThroughMultithreading(String initialPath,String finalPath, int numberOfThreads) throws IOException, InterruptedException {
+        for(int i=0;i<numberOfThreads;i++){
+            Multithreading multithreadingFileCopying_thread1 = new Multithreading(initialPath,finalPath);
+        }
+}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        int totalNumberOfThreads = 1;
-//        for(int i=0;i<totalNumberOfThreads;i++){
-////            Multithreading Thread = new Multithreading();
-////            Thread.start();
-//            RecursiveDirectoryFileCreation recursiveDirectoryFileCreation
-//                    = new RecursiveDirectoryFileCreation(initialPath,finalPath);
-////            recursiveDirectoryFileCreation.start();
-//       }
-
-//        System.out.println("Total Time Taken------->"+(System.currentTimeMillis()-startTime));
-//    }
 
